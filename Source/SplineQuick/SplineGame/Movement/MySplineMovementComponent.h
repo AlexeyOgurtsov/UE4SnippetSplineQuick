@@ -33,9 +33,6 @@ public:
 	float GetSpeed() const { return Speed; }
 
 	UFUNCTION(BlueprintPure, Category = Transform)
-	FTransform GetSplineSpaceTransform() const { return SplineSpaceTransform; }
-
-	UFUNCTION(BlueprintPure, Category = Transform)
 	float GetLocationAlongSpline() const { return LocationAlongSpline; }
 
 protected:
@@ -72,12 +69,6 @@ private:
 
 	UFUNCTION()
 	void MoveAlongSpline(float InDistance, ETeleportType InTeleportType);
-
-	/**
-	* Transform in space of the current spline point.
-	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true), Category = "Transform")
-	FTransform SplineSpaceTransform;
 
 	UPROPERTY()
 	bool bSweepWhenMove;

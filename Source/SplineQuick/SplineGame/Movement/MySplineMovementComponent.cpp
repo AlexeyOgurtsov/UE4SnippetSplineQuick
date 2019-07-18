@@ -68,10 +68,8 @@ void MyComponentType::SetupInitialTransform()
 		case EMySplineComponentTransformMode::KeepWorld:
 		{
 			M_LOG(TEXT("KeepWorld transform chosen, teleporting updated component to initial location/rotation"));
-
-			M_NOT_IMPL_MSG(TEXT("Compute spline-space transform from world"));
-			break;
 		}
+		/*Fallthrough*/ M_TO_BE_IMPL(TEXT("Keeping world transform is NOT yet implemented, using Relative Transform"));
 
 		case EMySplineComponentTransformMode::KeepRelative:
 		{
@@ -85,13 +83,9 @@ void MyComponentType::SetupInitialTransform()
 
 FTransform MyComponentType::GetWorldTransformAlongSpline(float InDistance)
 {
-	FTransform WorldTransform;
-
-	M_NOT_IMPL_MSG(TEXT("Init NewWorldLocation")); FVector const NewWorldLocation = FVector { EForceInit::ForceInitToZero };
-	M_NOT_IMPL_MSG(TEXT("Init NewQuat")); FQuat const NewQuat = FQuat { EForceInit::ForceInitToZero };
-
-	M_NOT_IMPL_MSG(TEXT("Compute WorldTransform"));
-	return WorldTransform;
+	FVector const NewWorldLocation = SplineComponent->GetLocationAtDistanceAlongSpline(InDistance, ESplineCoordinateSpace::World);
+	FQuat const NewQuat = SplineComponent->GetQuaternionAtDistanceAlongSpline(InDistance, ESplineCoordinateSpace::World);
+	return FTransform { NewQuat, NewWorldLocation };
 }
 void MyComponentType::MoveAlongSpline(float InDistance, ETeleportType InTeleportType)
 {
