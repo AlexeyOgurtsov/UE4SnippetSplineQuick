@@ -44,17 +44,38 @@ void MyComponentType::BeginPlay()
 	M_LOGFUNC();
 	Super::BeginPlay();
 
-	if( nullptr == SplineComponent)
-	{
-		return;
-	}
+	UpdateSplineComponentPropertyFromProvider();
 
-	if( nullptr == UpdatedComponent )
+	if(SplineComponent != nullptr && UpdatedComponent != nullptr)
 	{
-		return;
+		SetupInitialTransform();
 	}
+}
 
-	SetupInitialTransform();
+void MyComponentType::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	if(PropertyChangedEvent.Property)
+	{
+		if(PropertyChangedEvent.Property->GetName() == FString(TEXT("SplineProvider")))
+		{
+			UpdateSplineComponentPropertyFromProvider();
+		}
+	}
+}
+
+void MyComponentType::UpdateSplineComponentPropertyFromProvider()
+{
+	if(SplineProvider)
+	{
+		SplineComponent = SplineProvider->FindComponentByClass<USplineComponent>();
+	}
+	else
+	{
+		M_LOG_WARN(TEXT("SplineProvider is nullptr"));
+		SplineComponent = nullptr;
+	}
 }
 
 void MyComponentType::SetupInitialTransform()
@@ -100,7 +121,20 @@ void MyComponentType::PostInitProperties()
 {
 	M_LOGFUNC();
 
-	M_LOG_WARN_IF(SplineComponent == nullptr, TEXT("SplineComponent pointer must NEVER be nullptr"));
+	Super::PostInitProperties();
+
+	M_LOG_WARN_IF(SplineProvider == nullptr, TEXT("SplineProvider pointer must NEVER be nullptr"));
+	UpdateSplineComponentPropertyFromProvider();
+}
+
+void MyComponentType::PostLoad()
+{
+	M_LOGFUNC();
+
+	Super::PostLoad();
+
+	M_LOG_WARN_IF(SplineProvider == nullptr, TEXT("SplineProvider pointer must NEVER be nullptr"));
+	UpdateSplineComponentPropertyFromProvider();
 }
 
 void MyComponentType::TickComponent(float const InDeltaTime, ELevelTick const InLevelTick, FActorComponentTickFunction* const InThisTickFunction)

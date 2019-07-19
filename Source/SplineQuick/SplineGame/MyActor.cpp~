@@ -4,7 +4,7 @@
 
 AMyActor::AMyActor()
 {
-	Movement = CreateDefaultSubobject<UMySplineMovementComponent>(TEXT("Movement"));
+	CreateDefaultSubobject<UMySplineMovementComponent>(TEXT("Movement"));
 }
 
 void AMyActor::BeginPlay()

@@ -7,8 +7,6 @@
 #include "Util/TestUtil/TUVisibleActor.h"
 #include "MyActor.generated.h"
 
-class UMySplineMovementComponent;
-
 UCLASS()
 class AMyActor : public ATUVisibleActor
 {
